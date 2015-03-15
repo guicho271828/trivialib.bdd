@@ -1,4 +1,4 @@
-(in-package :optima-bdd)
+(in-package :trivialib.bdd)
 
 ;;;; hash-table
 ;;;; these codes are shared among bdd, zdd

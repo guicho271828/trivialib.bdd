@@ -20,7 +20,7 @@
   :author "Masataro Asai"
   :mailto "guicho2.71828@gmail.com"
   :license "LLGPL"
-  :depends-on (:alexandria :trivia :iterate)
+  :depends-on (:alexandria :trivia :trivial-garbage :immutable-struct)
   :pathname "src/"
   :components ((:file "0.package")
                (:file "1.struct")

@@ -8,7 +8,7 @@
   (:use :cl
         :trivialib.bdd
         :fiveam
-        :alexandria :trivia :trivia.skip))
+        :alexandria :trivia))
 (in-package :trivialib.bdd.test)
 
 

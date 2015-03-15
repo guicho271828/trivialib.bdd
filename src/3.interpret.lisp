@@ -1,4 +1,4 @@
-(in-package :optima-bdd)
+(in-package :trivialib.bdd)
 
 ;;;; shared among bdd, zdd
 

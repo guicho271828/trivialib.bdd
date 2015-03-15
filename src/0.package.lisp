@@ -5,8 +5,8 @@
 
 (in-package :cl-user)
 (defpackage trivialib.bdd
-  (:use :cl :alexandria :trivia :iterate)
-  (:shadowing-import-from :optima-immutable-struct :defstruct :ftype :id-mixin)
+  (:use :cl :alexandria :trivia)
+  (:shadowing-import-from :immutable-struct :defstruct :ftype)
   (:export
    #:bdd
    #:bdd-apply

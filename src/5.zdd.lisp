@@ -1,6 +1,6 @@
 
 ;;;; Zero-Suppressed BDDs for Set Manipulation in Combinatorial Problems. Minato, S
-(in-package :optima-bdd)
+(in-package :trivialib.bdd)
 
 ;;;; proclamations
 
@@ -10,7 +10,7 @@
 (ftype zdd-apply (op) (dd?) (dd?) (dd?))
 (defun zdd-apply (op f g)
   (declare (notinline zdd-apply))
-  (multiple-value-match (values f g)
+  (match* (f g)
     (((boolean) (boolean)) (interpret op f g))
     ;; if we ever reach a condition where one of the arguments is a
     ;; terminal vertex representing the “dominant” value for operation

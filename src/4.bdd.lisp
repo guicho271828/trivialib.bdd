@@ -1,6 +1,6 @@
 
 ;;;; Symbolic Boolean Manipulation with Ordered Binary-Decision Kliagrams RANDALE, BRYANT, 1986
-(in-package :optima-bdd)
+(in-package :trivialib.bdd)
 
 ; Symbolic Boolean Manipulation with Ordered Binary-Decision Kliagrams
 ; RANDALE, BRYANT, 1986
@@ -16,7 +16,7 @@
 (ftype bdd-apply (op) (dd?) (dd?) (dd?))
 (defun bdd-apply (op f g)
   (declare (notinline bdd-apply))
-  (multiple-value-match (values f g)
+  (match* (f g)
     ;;   For the case where both rf and rg are terminal
     ;; vertices, the recursion terminates by returning an appropriately labeled
     ;; terminal vertex.
