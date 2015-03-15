@@ -20,9 +20,13 @@
   :author "Masataro Asai"
   :mailto "guicho2.71828@gmail.com"
   :license "LLGPL"
-  :depends-on (:alexandria :trivia)
-  :components ((:module "src"
-                :components
-                ((:file "package"))))
-  :description ""
+  :depends-on (:alexandria :trivia :iterate)
+  :pathname "src/"
+  :components ((:file "0.package")
+               (:file "1.struct")
+               (:file "2.hash")
+               (:file "3.interpret")
+               (:file "4.bdd")
+               (:file "5.zdd"))
+  :description "BDD and ZDD implementation"
   :in-order-to ((test-op (load-op trivialib.bdd.test))))
