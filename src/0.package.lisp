@@ -8,24 +8,13 @@
   (:use :cl :alexandria :trivia)
   (:shadowing-import-from :immutable-struct :defstruct :ftype)
   (:export
-   #:bdd
+   #:dd
+   #:leaf
+   #:internal
    #:bdd-apply
    #:bdd-restrict
-   #:bdd-not
-   #:bdd-xor
-   #:bdd/bitvec
-   #:bdd-or
-   #:bdd-and
    #:zdd-apply
-   #:zdd-hash
-   #:zdd-restrict
-   #:zdd-xor
-   #:zdd-and
-   #:zdd-or
-   #:zdd/bitvec
-   #:zdd-not
-   #:bdd-restrict/bitvec
-   #:zdd-restrict/bitvec))
+   #:zdd-restrict))
 (in-package :trivialib.bdd)
 
 ;; blah blah blah.

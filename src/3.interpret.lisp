@@ -2,8 +2,9 @@
 
 ;;;; shared among bdd, zdd
 
-(declaim (inline interpret))
-(ftype interpret (op) boolean (dd?) (dd?))
+;; (declaim (inline interpret))
+;; (ftype interpret (op) boolean (dd?) (dd?))
+
 (defun interpret (op bool thing)
   "interpret is non-consing."
   (case op
