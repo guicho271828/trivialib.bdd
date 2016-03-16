@@ -1,16 +1,13 @@
 
 (in-package :trivialib.bdd)
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (push :debug *features*))
-
-#+debug
+#+trivialib.bdd.debug
 (defvar *id* 0)
 
 (defstruct leaf
   "Leaf node of a decision diagram"
   (content nil)
-  #+debug
+  #+trivialib.bdd.debug
   (id (incf *id*)))
 
 (declaim (type hash-table *leaf-cache*))
@@ -28,7 +25,7 @@ TRUE,FALSE: true/false pointer"
   (variable 0 :type fixnum)
   (true (leaf nil) :type (or node leaf))
   (false (leaf nil) :type (or node leaf))
-  #+debug
+  #+trivialib.bdd.debug
   (id (incf *id*)))
 
 (defvar *node-cache*)

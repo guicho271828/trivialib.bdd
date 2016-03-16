@@ -3,13 +3,6 @@
   Copyright (c) 2015 Masataro Asai (guicho2.71828@gmail.com)
 |#
 
-
-(in-package :cl-user)
-(defpackage trivialib.bdd.test-asd
-  (:use :cl :asdf))
-(in-package :trivialib.bdd.test-asd)
-
-
 (defsystem trivialib.bdd.test
   :author "Masataro Asai"
   :license "LLGPL"
