@@ -46,3 +46,20 @@ TRUE,FALSE: true/false pointer"
 
 (defpattern node (&optional variable true false)
   `(structure node :variable ,variable :true ,true :false ,false))
+
+
+(defun bdd-node (variable true false)
+  "Node generation & pruning rule for BDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
+  (if (eq true false)
+      true
+      (ensure-gethash (vector variable true false)
+                      *node-cache*
+                      (make-node :variable variable :true true :false false))))
+
+(defun zdd-node (variable true false)
+  "Node generation & pruning rule for ZDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
+  (if (eq true (leaf nil))
+      false
+      (ensure-gethash (vector variable true false)
+                      *node-cache*
+                      (make-node :variable variable :true true :false false))))
