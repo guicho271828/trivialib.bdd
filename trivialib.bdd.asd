@@ -17,7 +17,8 @@
   :pathname "src/"
   :components ((:file "0.package")
                (:file "1.struct")
-               (:file "3.container")
+               (:file "2.container")
+               (:file "3.bdd")
                (:file "4.util"))
   :serial t
   :description "BDD and ZDD implementation"
