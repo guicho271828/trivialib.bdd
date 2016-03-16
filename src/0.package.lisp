@@ -11,13 +11,16 @@
    #:leaf
    #:node
    #:node-apply
-   #:bdd
-   #:zdd
+   #:bdd-node
+   #:zdd-node
    ;; managing contexts
    #:odd
    #:odd-apply
    #:with-odd-context
    #:call-with-odd-context
+   ;; utility
+   #:bdd
+   #:zdd
    #:bdd-apply
    #:zdd-apply))
 (in-package :trivialib.bdd)
