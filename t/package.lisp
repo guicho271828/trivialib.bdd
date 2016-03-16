@@ -62,3 +62,12 @@
     (signals error
       (odd-apply odd1 odd2 (lambda (a b) (xor a b))))))
 
+
+(test util
+  (with-odd-context (:variables '(a b))
+    (let ((odd1 (bdd (unit 0)))
+          (odd2 (bdd (unit 1))))
+      (finishes
+        (print (odd-apply odd1 odd2 (lambda (a b) (xor a b))))))))
+
+

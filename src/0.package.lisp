@@ -22,7 +22,8 @@
    #:bdd
    #:zdd
    #:bdd-apply
-   #:zdd-apply))
+   #:zdd-apply
+   #:unit))
 (in-package :trivialib.bdd)
 
 ;; blah blah blah.
