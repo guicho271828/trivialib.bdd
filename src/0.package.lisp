@@ -8,13 +8,16 @@
   (:use :cl :alexandria :trivia)
   (:shadowing-import-from :immutable-struct :ftype)
   (:export
-   #:dd
    #:leaf
-   #:odd-apply
-   #:odd
-   #:with-odd-context
+   #:node
+   #:node-apply
    #:bdd
    #:zdd
+   ;; managing contexts
+   #:odd
+   #:odd-apply
+   #:with-odd-context
+   #:call-with-odd-context
    #:bdd-apply
    #:zdd-apply))
 (in-package :trivialib.bdd)
