@@ -2,20 +2,12 @@
 ;;;; Symbolic Boolean Manipulation with Ordered Binary-Decision Kliagrams RANDALE, BRYANT, 1986
 (in-package :trivialib.bdd)
 
-; Symbolic Boolean Manipulation with Ordered Binary-Decision Kliagrams
-; RANDALE, BRYANT, 1986
-
-;;;; proclamations
-
-(declaim (inline bdd-apply bdd*))
-
 ;;;; APPLY implementation from Bryant et.al.
 
 ;; Suppose functions f and g are represented by OBDDS with root vertices rf
 ;; and rg, respectively.
 (ftype bdd-apply (op) (dd?) (dd?) (dd?))
 (defun bdd-apply (op f g)
-  (declare (notinline bdd-apply))
   (match* (f g)
     ;;   For the case where both rf and rg are terminal
     ;; vertices, the recursion terminates by returning an appropriately labeled
@@ -48,7 +40,6 @@
         (bdd* f-tag
               (bdd-apply op f-hi g-hi)
               (bdd-apply op f-lo g-lo)))))))
-(declaim (notinline bdd-apply))
 
 ;; FIXME: according to Bryant et at, memoizing the results of bdd-apply is
 ;; effective. Therefore using function-cache:defcached is appropriate.

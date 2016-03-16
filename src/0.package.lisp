@@ -6,7 +6,7 @@
 (in-package :cl-user)
 (defpackage trivialib.bdd
   (:use :cl :alexandria :trivia)
-  (:shadowing-import-from :immutable-struct :defstruct :ftype)
+  (:shadowing-import-from :immutable-struct :ftype)
   (:export
    #:dd
    #:leaf

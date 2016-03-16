@@ -24,9 +24,10 @@
   :pathname "src/"
   :components ((:file "0.package")
                (:file "1.struct")
-               (:file "2.hash")
-               (:file "3.interpret")
-               (:file "4.bdd")
-               (:file "5.zdd"))
+               ;; (:file "2.hash")
+               (:file "3.container")
+               ;; (:file "4.bdd")
+               ;; (:file "5.zdd")
+               )
   :description "BDD and ZDD implementation"
   :in-order-to ((test-op (load-op trivialib.bdd.test))))
