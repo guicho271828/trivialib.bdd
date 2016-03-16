@@ -14,7 +14,9 @@
    #:bdd-apply
    #:bdd-restrict
    #:zdd-apply
-   #:zdd-restrict))
+   #:zdd-restrict
+   #:odd-apply
+   #:odd))
 (in-package :trivialib.bdd)
 
 ;; blah blah blah.

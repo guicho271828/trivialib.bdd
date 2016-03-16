@@ -29,11 +29,5 @@ true,false: true/false pointer"
 (setf (documentation '*node-cache* 'variable)
       "hash table to look up in order to avoid the creation of redundunt nodes.")
 
-(defun node (variable true false)
-  (ensure-gethash (vector variable true false)
-                  *node-cache*
-                  (make-node :variable variable :true true :false false)))
-
-
 (defpattern node (&optional variable true false)
   `(structure node :variable ,variable :true ,true :false ,false))
