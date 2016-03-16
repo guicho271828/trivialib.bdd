@@ -22,9 +22,9 @@
   (ensure-gethash thing *leaf-cache* (make-leaf :content thing)))
 
 (defstruct node
-  "lightweight node in Decision Diagram
-variable: an integer representing the index of a variable. cf. VARIABLES slot in structure DD
-true,false: true/false pointer"
+  "lightweight node in Decision Diagram.
+VARIABLE: an integer representing the index of a variable. cf. VARIABLES slot in structure DD
+TRUE,FALSE: true/false pointer"
   (variable 0 :type fixnum)
   (true (leaf nil) :type (or node leaf))
   (false (leaf nil) :type (or node leaf))

@@ -2,7 +2,9 @@
 (in-package :trivialib.bdd)
 
 (immutable-struct:defstruct odd
-  "structure representing a whole Decision Diagram"
+  "Structure representing a whole Decision Diagram.
+Holds the context information such as variables and node-cache.
+For different variable ordering, ODDs are incompatible."
   (root (leaf nil) :type (or node leaf))
   (variables *variables* :type sequence)
   (node-cache *node-cache* :type hash-table))
@@ -12,10 +14,23 @@
 ;;     ;; (princ :root s)
 ;;     (princ (odd-root odd) s)))
 
-(defmacro with-odd-context ((&key variables &allow-other-keys) &body body)
-  `(let ((*node-cache* (tg:make-weak-hash-table :weakness :value :test #'equalp))
-         (*variables* ,variables))
-     ,@body))
+(defmacro with-odd-context ((&key odd variables node-cache
+                                  &allow-other-keys) &body body)
+  "Execute BODY in a dynamic environment where *VARIABLES* and *NODE-CACHE* are set.
+When ODD is specified, the values in its VARIABLES and NODE-CACHE slots are used by default,
+but VARIABLES and NODE-CACHE supersede."
+  `(call-with-odd-context ,odd ,variables ,node-cache (lambda () ,@body)))
+
+(defun call-with-odd-context (odd variables node-cache body-fn)
+  (match odd
+    ((odd :variables vs :node-cache nc)
+     (let ((*variables* (or variables vs))
+           (*node-cache* (or node-cache nc)))
+       (funcall body-fn)))
+    (_
+     (let ((*variables* variables)
+           (*node-cache* (or node-cache (tg:make-weak-hash-table :weakness :value :test #'equalp))))
+       (funcall body-fn)))))
 
 (defun-ematch* odd-compatible-p (odd1 odd2)
   (((odd :variables vars1 :node-cache node-cache1) (odd :variables vars2 :node-cache node-cache2))
