@@ -18,4 +18,4 @@
   :components ((:module "t"
                 :components
                 ((:file "package"))))
-  :perform (load-op :after (op c) (eval (read-from-string "(5am:run :trivialib.bdd)"))))
+  :perform (test-op :after (op c) (eval (read-from-string "(5am:run :trivialib.bdd)"))))

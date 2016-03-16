@@ -30,4 +30,4 @@
                ;; (:file "5.zdd")
                )
   :description "BDD and ZDD implementation"
-  :in-order-to ((test-op (load-op trivialib.bdd.test))))
+  :in-order-to ((test-op (test-op trivialib.bdd.test))))
