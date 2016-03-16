@@ -36,3 +36,18 @@
           (dd2 (zdd 1 (leaf t) (leaf nil))))
       (print (node-apply dd1 dd2 #'zdd (lambda (a b) (xor a b)))))))
 
+(test env
+  (let* ((odd1 (with-odd-context (:variables '(a b))
+                 (odd (bdd 0 (leaf t) (leaf nil)))))
+         (odd2 (with-odd-context (:odd odd1)
+                 (odd (bdd 0 (leaf t) (leaf nil))))))
+    (finishes
+      (odd-apply odd1 odd2 #'bdd (lambda (a b) (xor a b)))))
+  (let* ((odd1 (with-odd-context (:variables '(a b))
+                 (odd (bdd 0 (leaf t) (leaf nil)))))
+         (odd2 (with-odd-context (:variables '(b a))
+                 (odd (bdd 0 (leaf t) (leaf nil))))))
+    (signals error
+      (odd-apply odd1 odd2 #'bdd (lambda (a b) (xor a b))))))
+
+
