@@ -70,4 +70,34 @@
       (finishes
         (print (odd-apply odd1 odd2 (lambda (a b) (xor a b))))))))
 
+(defun gcprint (thing &rest args)
+  (let ((*print-circle* t))
+    (apply #'print
+           (prog1 thing
+                  (tg:gc :full t :verbose t))
+           args)))
 
+(test compare-zdd-bdd
+  ;; Knuth Chapter 4, figure 12 (and 122), rightmost ("kernel")
+  ;; represent a set {{1,3,5},{1,4},{2,4,6},{2,5},{3,6}}
+  (labels ((o (x) (odd (unit x)))
+           (x (x) (odd (!unit x)))
+           (add2 (dd1 dd2) (odd-apply dd1 dd2 (lambda (a b) (or a b))))
+           (mul2 (dd1 dd2) (odd-apply dd1 dd2 (lambda (a b) (and a b))))
+           (add (dd1 dd2 &rest args)
+             (if args
+                 (apply #'add (add2 dd1 dd2) args)
+                 (add2 dd1 dd2)))
+           (mul (dd1 dd2 &rest args)
+             (if args
+                 (apply #'mul (mul2 dd1 dd2) args)
+                 (mul2 dd1 dd2))))
+
+    (with-odd-context ()
+      ;; 23
+      (gcprint
+       (add (mul (o 1) (x 2) (o 3) (x 4) (o 5) (x 6))
+            (mul (o 1) (x 2) (x 3) (o 4) (x 5) (x 6))
+            (mul (x 1) (o 2) (x 3) (o 4) (x 5) (o 6))
+            (mul (x 1) (o 2) (x 3) (x 4) (o 5) (x 6))
+            (mul (x 1) (x 2) (o 3) (x 4) (x 5) (o 6)))))))
