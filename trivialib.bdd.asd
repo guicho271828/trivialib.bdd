@@ -26,7 +26,7 @@
                (:file "1.struct")
                ;; (:file "2.hash")
                (:file "3.container")
-               ;; (:file "4.bdd")
+               (:file "4.util")
                ;; (:file "5.zdd")
                )
   :serial t
