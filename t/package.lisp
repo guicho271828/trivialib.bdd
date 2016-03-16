@@ -22,9 +22,9 @@
     (is (eq (leaf nil) (leaf nil)))
     (is (eq (bdd 0 (leaf t) (leaf nil))
             (bdd 0 (leaf t) (leaf nil))))
-    (let ((dd1 (odd (bdd 0 (leaf t) (leaf nil))))
-          (dd2 (odd (bdd 1 (leaf t) (leaf nil)))))
-      (print (odd-apply dd1 dd2 #'bdd (lambda (a b) (xor a b)))))))
+    (let ((dd1 (bdd 0 (leaf t) (leaf nil)))
+          (dd2 (bdd 1 (leaf t) (leaf nil))))
+      (print (node-apply dd1 dd2 #'bdd (lambda (a b) (xor a b)))))))
 
 (test zdd-xor
   (with-odd-context (:variables '(a b))
@@ -32,6 +32,7 @@
     (is (eq (leaf nil) (leaf nil)))
     (is (eq (bdd 0 (leaf t) (leaf nil))
             (bdd 0 (leaf t) (leaf nil))))
-    (let ((dd1 (odd (zdd 0 (leaf t) (leaf nil))))
-          (dd2 (odd (zdd 1 (leaf t) (leaf nil)))))
-      (print (odd-apply dd1 dd2 #'zdd (lambda (a b) (xor a b)))))))
+    (let ((dd1 (zdd 0 (leaf t) (leaf nil)))
+          (dd2 (zdd 1 (leaf t) (leaf nil))))
+      (print (node-apply dd1 dd2 #'zdd (lambda (a b) (xor a b)))))))
+
