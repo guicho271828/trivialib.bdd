@@ -10,13 +10,13 @@
   (:export
    #:dd
    #:leaf
-   #:internal
-   #:bdd-apply
-   #:bdd-restrict
-   #:zdd-apply
-   #:zdd-restrict
    #:odd-apply
-   #:odd))
+   #:odd
+   #:with-odd-context
+   #:bdd
+   #:zdd
+   #:bdd-apply
+   #:zdd-apply))
 (in-package :trivialib.bdd)
 
 ;; blah blah blah.

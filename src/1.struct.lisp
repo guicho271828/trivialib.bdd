@@ -1,10 +1,17 @@
 
 (in-package :trivialib.bdd)
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (push :debug *features*))
+
+#+debug
+(defvar *id* 0)
 
 (defstruct leaf
   "Leaf node of a decision diagram"
-  (content nil))
+  (content nil)
+  #+debug
+  (id (incf *id*)))
 
 (declaim (type hash-table *leaf-cache*))
 (defvar *leaf-cache* (tg:make-weak-hash-table :weakness :value :test #'eql)
@@ -20,14 +27,22 @@ variable: an integer representing the index of a variable. cf. VARIABLES slot in
 true,false: true/false pointer"
   (variable 0 :type fixnum)
   (true (leaf nil) :type (or node leaf))
-  (false (leaf nil) :type (or node leaf)))
+  (false (leaf nil) :type (or node leaf))
+  #+debug
+  (id (incf *id*)))
 
-(declaim (type hash-table *node-cache*))
-;; (tg:make-weak-hash-table :weakness :value :test #'equalp)
 (defvar *node-cache*)
+(declaim (type hash-table *node-cache*))
 
 (setf (documentation '*node-cache* 'variable)
       "hash table to look up in order to avoid the creation of redundunt nodes.")
+
+(defvar *variables*)
+(declaim (type sequence *variables*))
+
+(setf (documentation '*variables* 'variable)
+      "ODD variables in the current context.")
+
 
 (defpattern node (&optional variable true false)
   `(structure node :variable ,variable :true ,true :false ,false))

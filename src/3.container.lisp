@@ -4,8 +4,18 @@
 (immutable-struct:defstruct odd
   "structure representing a whole Decision Diagram"
   (root (leaf nil) :type (or node leaf))
-  (variables nil :type sequence)
-  (node-cache (or *node-cache* (tg:make-weak-hash-table :weakness :value :test #'equalp))))
+  (variables *variables* :type sequence)
+  (node-cache *node-cache* :type hash-table))
+
+;; (defmethod print-object ((odd odd) s)
+;;   (print-unreadable-object (odd s :type t :identity t)
+;;     ;; (princ :root s)
+;;     (princ (odd-root odd) s)))
+
+(defmacro with-odd-context ((&key variables &allow-other-keys) &body body)
+  `(let ((*node-cache* (tg:make-weak-hash-table :weakness :value :test #'equalp))
+         (*variables* ,variables))
+     ,@body))
 
 (defun-ematch* odd-compatible-p (odd1 odd2)
   (((odd :variables vars1 :node-cache node-cache1) (odd :variables vars2 :node-cache node-cache2))
@@ -23,7 +33,7 @@
   (labels ((rec (f g)
              (match* (f g)
                (((leaf :content c1) (leaf :content c2))
-                (funcall op-leaf c1 c2))
+                (leaf (funcall op-leaf c1 c2)))
                (((leaf) (node variable true false))
                 (funcall node-generator
                          variable
