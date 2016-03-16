@@ -1,23 +1,65 @@
 
 (in-package :trivialib.bdd)
 
-;; use t/nil, not 0/1
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (push :debug *features*))
 
-(defstruct dd
-  (tag 0 :type fixnum)
-  (true t :type (or boolean dd))
-  (false nil :type (or boolean dd)))
+#+debug
+(defvar *id* 0)
 
-(defpattern dd (&optional tag true false)
-  `(structure dd (tag ,tag) (true ,true) (false ,false)))
+(defstruct leaf
+  "Leaf node of a decision diagram"
+  (content nil)
+  #+debug
+  (id (incf *id*)))
 
-(deftype dd? ()
-  `(or boolean dd))
+(declaim (type hash-table *leaf-cache*))
+(defvar *leaf-cache* (tg:make-weak-hash-table :weakness :value :test #'eql)
+  "hash table to look up a leaf node of a thing.")
 
-(defpattern boolean ()
-  `(or t nil))
+(defun leaf (thing)
+  "Return the leaf node in the hash table *leaf-cache*, creating an instance when required"
+  (ensure-gethash thing *leaf-cache* (make-leaf :content thing)))
 
-(deftype op ()
-  `(or (eql and) (eql or) (eql xor)))
+(defstruct node
+  "lightweight node in Decision Diagram.
+VARIABLE: an integer representing the index of a variable. cf. VARIABLES slot in structure DD
+TRUE,FALSE: true/false pointer"
+  (variable 0 :type fixnum)
+  (true (leaf nil) :type (or node leaf))
+  (false (leaf nil) :type (or node leaf))
+  #+debug
+  (id (incf *id*)))
+
+(defvar *node-cache*)
+(declaim (type hash-table *node-cache*))
+
+(setf (documentation '*node-cache* 'variable)
+      "hash table to look up in order to avoid the creation of redundunt nodes.")
+
+(defvar *variables*)
+(declaim (type sequence *variables*))
+
+(setf (documentation '*variables* 'variable)
+      "ODD variables in the current context.")
 
 
+(defpattern node (&optional variable true false)
+  `(structure node :variable ,variable :true ,true :false ,false))
+
+
+(defun bdd-node (variable true false)
+  "Node generation & pruning rule for BDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
+  (if (eq true false)
+      true
+      (ensure-gethash (vector variable true false)
+                      *node-cache*
+                      (make-node :variable variable :true true :false false))))
+
+(defun zdd-node (variable true false)
+  "Node generation & pruning rule for ZDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
+  (if (eq true (leaf nil))
+      false
+      (ensure-gethash (vector variable true false)
+                      *node-cache*
+                      (make-node :variable variable :true true :false false))))

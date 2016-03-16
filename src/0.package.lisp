@@ -6,26 +6,24 @@
 (in-package :cl-user)
 (defpackage trivialib.bdd
   (:use :cl :alexandria :trivia)
-  (:shadowing-import-from :immutable-struct :defstruct :ftype)
+  (:shadowing-import-from :immutable-struct :ftype)
   (:export
+   #:leaf
+   #:node
+   #:node-apply
+   #:bdd-node
+   #:zdd-node
+   ;; managing contexts
+   #:odd
+   #:odd-apply
+   #:with-odd-context
+   #:call-with-odd-context
+   ;; utility
    #:bdd
+   #:zdd
    #:bdd-apply
-   #:bdd-restrict
-   #:bdd-not
-   #:bdd-xor
-   #:bdd/bitvec
-   #:bdd-or
-   #:bdd-and
    #:zdd-apply
-   #:zdd-hash
-   #:zdd-restrict
-   #:zdd-xor
-   #:zdd-and
-   #:zdd-or
-   #:zdd/bitvec
-   #:zdd-not
-   #:bdd-restrict/bitvec
-   #:zdd-restrict/bitvec))
+   #:unit))
 (in-package :trivialib.bdd)
 
 ;; blah blah blah.

@@ -16,38 +16,58 @@
 (def-suite :trivialib.bdd)
 (in-suite :trivialib.bdd)
 
-(defun merge-bdd (bvs op)
-  (reduce (curry #'bdd-apply op) bvs :key #'bdd/bitvec))
+(test bdd-xor
+  (with-odd-context (:variables '(a b))
+    (is (eq (leaf t) (leaf t)))
+    (is (eq (leaf nil) (leaf nil)))
+    (is (eq (bdd-node 0 (leaf t) (leaf nil))
+            (bdd-node 0 (leaf t) (leaf nil))))
+    (let ((dd1 (bdd-node 0 (leaf t) (leaf nil)))
+          (dd2 (bdd-node 1 (leaf t) (leaf nil))))
+      (print (node-apply dd1 dd2 #'bdd-node (lambda (a b) (xor a b)))))))
 
-(test bdd
-  (is (eq t (merge-bdd '(#*1 #*0) 'or)))
-  (is (eq nil (merge-bdd '(#*1 #*0) 'and)))
-  (is (eq nil (bdd-not t)))
-  (is (eq t (bdd-not nil)))
-  (is (eq nil (bdd-apply 'and
-                         (bdd/bitvec #*0110)
-                         (merge-bdd '(#*0001 #*1000) 'or))))
+(test zdd-xor
+  (with-odd-context (:variables '(a b))
+    (is (eq (leaf t) (leaf t)))
+    (is (eq (leaf nil) (leaf nil)))
+    (is (eq (zdd-node 0 (leaf t) (leaf nil))
+            (zdd-node 0 (leaf t) (leaf nil))))
+    (let ((dd1 (zdd-node 0 (leaf t) (leaf nil)))
+          (dd2 (zdd-node 1 (leaf t) (leaf nil))))
+      (print (node-apply dd1 dd2 #'zdd-node (lambda (a b) (xor a b)))))))
 
-  (is (eq nil (reduce
-               (lambda (zdd args) (apply #'zdd-restrict zdd args))
-               (list* (merge-bdd '(#*0001 #*1000) 'or)
-                      (map 'list #'list (iota 4) (map 'list #'plusp #*0110))))))
-  (is (eq nil (bdd-restrict/bitvec (merge-bdd '(#*0001 #*1000) 'or)
-                                   #*0110))))
+(test env
+  (let* ((odd1 (with-odd-context (:variables '(a b))
+                 (odd (bdd-node 0 (leaf t) (leaf nil)))))
+         (odd2 (with-odd-context (:default odd1)
+                 (odd (bdd-node 0 (leaf t) (leaf nil))))))
+    (finishes
+      (odd-apply odd1 odd2 (lambda (a b) (xor a b)))))
+  (let* ((odd1 (with-odd-context (:variables '(a b))
+                 (odd (bdd-node 0 (leaf t) (leaf nil)))))
+         (odd2 (with-odd-context (:variables '(b a))
+                 (odd (bdd-node 0 (leaf t) (leaf nil))))))
+    (signals error
+      (odd-apply odd1 odd2 (lambda (a b) (xor a b)))))
+  (let* ((odd1 (with-odd-context (:variables '(a b))
+                 (odd (bdd-node 0 (leaf t) (leaf nil)))))
+         (odd2 (with-odd-context (:default odd1 :node-cache (make-hash-table))
+                 (odd (bdd-node 0 (leaf t) (leaf nil))))))
+    (signals error
+      (odd-apply odd1 odd2 (lambda (a b) (xor a b)))))
+  (let* ((odd1 (with-odd-context (:variables '(a b))
+                 (odd (bdd-node 0 (leaf t) (leaf nil)))))
+         (odd2 (with-odd-context (:default odd1 :generator #'zdd-node)
+                 (odd (bdd-node 0 (leaf t) (leaf nil))))))
+    (signals error
+      (odd-apply odd1 odd2 (lambda (a b) (xor a b))))))
 
-(defun merge-zdd (bvs op)
-  (reduce (curry #'zdd-apply op) bvs :key #'zdd/bitvec))
 
-(test zdd
-  ;(is (eq t (merge-zdd '(#*1 #*0) 'or)))
-  ;(is (eq nil (merge-zdd '(#*1 #*0) 'and)))
-  (is (eq nil (zdd-not t)))
-  (is (eq t (zdd-not nil)))
-  (is (eq nil (zdd-restrict/bitvec (merge-bdd '(#*0001 #*1000) 'or) #*0110))))
-
-
-
-
-
+(test util
+  (with-odd-context (:variables '(a b))
+    (let ((odd1 (bdd (unit 0)))
+          (odd2 (bdd (unit 1))))
+      (finishes
+        (print (odd-apply odd1 odd2 (lambda (a b) (xor a b))))))))
 
 
