@@ -18,14 +18,14 @@ For different variable ordering, ODDs are incompatible."
 ;;     ;; (princ :root s)
 ;;     (princ (odd-root odd) s)))
 
-(defmacro with-odd-context ((&key odd variables node-cache generator
+(defmacro with-odd-context ((&key default variables node-cache generator
                                   &allow-other-keys) &body body)
   "Execute BODY in a dynamic environment where *VARIABLES* , *NODE-CACHE* and *GENERATOR* are set.
-When ODD is specified, its values are used by default, but are superseded by the specified ones."
-  `(call-with-odd-context ,odd ,variables ,node-cache ,generator (lambda () ,@body)))
+When DEFAULT is specified, its values are used by default, but are superseded by the specified ones."
+  `(call-with-odd-context ,default ,variables ,node-cache ,generator (lambda () ,@body)))
 
-(defun call-with-odd-context (odd variables node-cache generator body-fn)
-  (match odd
+(defun call-with-odd-context (default variables node-cache generator body-fn)
+  (match default
     ((odd :variables vs :node-cache nc :generator g)
      (let ((*variables* (or variables vs))
            (*node-cache* (or node-cache nc))

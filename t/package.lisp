@@ -39,7 +39,7 @@
 (test env
   (let* ((odd1 (with-odd-context (:variables '(a b))
                  (odd (bdd-node 0 (leaf t) (leaf nil)))))
-         (odd2 (with-odd-context (:odd odd1)
+         (odd2 (with-odd-context (:default odd1)
                  (odd (bdd-node 0 (leaf t) (leaf nil))))))
     (finishes
       (odd-apply odd1 odd2 (lambda (a b) (xor a b)))))
@@ -51,13 +51,13 @@
       (odd-apply odd1 odd2 (lambda (a b) (xor a b)))))
   (let* ((odd1 (with-odd-context (:variables '(a b))
                  (odd (bdd-node 0 (leaf t) (leaf nil)))))
-         (odd2 (with-odd-context (:odd odd1 :node-cache (make-hash-table))
+         (odd2 (with-odd-context (:default odd1 :node-cache (make-hash-table))
                  (odd (bdd-node 0 (leaf t) (leaf nil))))))
     (signals error
       (odd-apply odd1 odd2 (lambda (a b) (xor a b)))))
   (let* ((odd1 (with-odd-context (:variables '(a b))
                  (odd (bdd-node 0 (leaf t) (leaf nil)))))
-         (odd2 (with-odd-context (:odd odd1 :generator #'zdd-node)
+         (odd2 (with-odd-context (:default odd1 :generator #'zdd-node)
                  (odd (bdd-node 0 (leaf t) (leaf nil))))))
     (signals error
       (odd-apply odd1 odd2 (lambda (a b) (xor a b))))))
