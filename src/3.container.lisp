@@ -37,7 +37,7 @@ but VARIABLES and NODE-CACHE supersede."
    (and
     ;; (eq (type-of odd1) (type-of odd2))
     (eq node-cache1 node-cache2)
-    (eq vars1 vars2))))
+    (equalp vars1 vars2))))
 
 (defun-ematch* odd-apply (odd1 odd2 node-generator op-leaf)
   (((odd root variables node-cache) (odd :root root2))
