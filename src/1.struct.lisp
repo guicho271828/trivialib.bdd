@@ -14,16 +14,6 @@
 (deftype dd? ()
   `(or boolean dd))
 
-(defpattern = (arg)
-  (with-gensyms (m)
-    `(guard ,m (= ,m ,arg))))
-(defpattern < (arg)
-  (with-gensyms (m)
-    `(guard ,m (< ,m ,arg))))
-(defpattern > (arg)
-  (with-gensyms (m)
-    `(guard ,m (> ,m ,arg))))
-
 (defpattern boolean ()
   `(or t nil))
 
