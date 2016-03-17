@@ -27,7 +27,9 @@
    #:zdd-apply
    #:change
    #:singleton
-   #:dont-care))
+   #:dont-care
+   #:make-set
+   #:make-family))
 (in-package :trivialib.bdd)
 
 ;; blah blah blah.

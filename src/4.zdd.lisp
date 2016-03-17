@@ -70,13 +70,17 @@
 (defun zdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation #'zdd-apply))
   (odd root variables node-cache operation))
 
+(defun make-set (variables)
+  "Example: (make-set '(1 3 5)) -- a zdd representing {{1,3,5}}"
+  (reduce #'change variables :initial-value (leaf t)))
 
-(defun dont-care (f variable)
-  (zdd-apply f (change f variable)
-             (lambda (a b) (or a b))))
+(defun make-family (families)
+  "Example: (make-family '((1 3 5) (2 4))) -- a zdd representing {{1,3,5},{2,4}}"
+  (reduce (lambda (prev next)
+            ;; union
+            (zdd-apply prev next (lambda (a b) (or a b))))
+          families :key #'make-set))
 
-(defun singleton (variable)
-  (change (leaf t) variable))
 
 
 

@@ -112,4 +112,20 @@
             (odd (change-many (leaf t) 1 4))
             (odd (change-many (leaf t) 2 4 6))
             (odd (change-many (leaf t) 2 5))
-            (odd (change-many (leaf t) 3 6)))))))
+            (odd (change-many (leaf t) 3 6)))))
+    (with-odd-context (:operation #'zdd-apply)
+      ;; 8 nodes
+      (gcprint
+       (add (odd (make-set '(1 3 5)))
+            (odd (make-set '(1 4)))
+            (odd (make-set '(2 4 6)))
+            (odd (make-set '(2 5)))
+            (odd (make-set '(3 6))))))
+    (with-odd-context (:operation #'zdd-apply)
+      ;; 8 nodes
+      (gcprint
+       (odd (make-family '((1 3 5)
+                           (1 4)
+                           (2 4 6)
+                           (2 5)
+                           (3 6))))))))
