@@ -43,9 +43,16 @@
     (rec f g)))
 
 
-(ftype change fixnum (or node leaf))
+(ftype change (or node leaf) fixnum (or node leaf))
 (defun change (f variable)
-  (match f
+  (ematch f
+    ;; ((leaf :content nil)
+    ;;  f)
+    ;; ((leaf :content t)
+    ;;  (zdd-node variable f (leaf nil)))
+    ;; equivalent to:
+    ((leaf)
+     (zdd-node variable f (leaf nil)))
     ((node f-variable f-hi f-lo)
      (typecase (the fixnum (- f-variable variable))
        ((integer * -1)       ; (< f-variable variable)
