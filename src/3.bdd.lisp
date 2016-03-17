@@ -23,16 +23,16 @@
                           (rec g lo)))
                (((node f-variable f-hi f-lo)
                  (node g-variable g-hi g-lo))
-                (typecase (- f-variable g-variable)
-                  ((integer * -1)
+                (typecase (the fixnum (- f-variable g-variable))
+                  ((integer * -1)       ; (< f-variable g-variable)
                    (bdd-node f-variable
                              (rec f-hi g)
                              (rec f-lo g)))
-                  ((integer 1 *)
+                  ((integer 1 *)        ; (> f-variable g-variable)
                    (bdd-node g-variable
                              (rec f g-hi)
                              (rec f g-lo)))
-                  ((integer 0 0)
+                  ((integer 0 0)        ; (= f-variable g-variable)
                    (bdd-node f-variable
                              (rec f-hi g-hi)
                              (rec f-lo g-lo))))))))
