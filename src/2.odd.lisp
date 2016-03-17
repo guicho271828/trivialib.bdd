@@ -3,7 +3,7 @@
 
 (defvar *operation*)
 (setf (documentation '*operation* 'variable)
-      "Generic Operations for a Decision Diagram in the current context, either #'BDD-APPLY or #'ZDD-APPLY.")
+      "Generic operations for a decision diagram in the current context, either #'BDD-APPLY or #'ZDD-APPLY.")
 
 (immutable-struct:defstruct odd
   "Structure representing a whole Decision Diagram.
@@ -22,6 +22,7 @@ When DEFAULT is specified, its values are used by default, but are superseded by
   `(call-with-odd-context ,default ,variables ,node-cache ,operation (lambda () ,@body)))
 
 (defun call-with-odd-context (default variables node-cache operation body-fn)
+  "Function version of WITH-ODD-CONTEXT."
   (match default
     ((odd :variables vs :node-cache nc :operation op)
      (let ((*variables* (or variables vs))
@@ -34,21 +35,25 @@ When DEFAULT is specified, its values are used by default, but are superseded by
            (*operation* operation))
        (funcall body-fn)))))
 
-(defun-ematch* odd-compatible-p (odd1 odd2)
-  (((odd :variables vars1
-         :node-cache node-cache1
-         :operation operation1)
-    (odd :variables vars2
-         :node-cache node-cache2
-         :operation operation2))
-   (and
-    ;; (eq (type-of odd1) (type-of odd2))
-    (eq node-cache1 node-cache2)
-    (eq operation1 operation2)
-    (equalp vars1 vars2))))
+(defun odd-compatible-p (odd1 odd2)
+  "Check if two ODDs have the same variable ordering, node-cache, and operations."
+  (ematch* (odd1 odd2)
+    (((odd :variables vars1
+           :node-cache node-cache1
+           :operation operation1)
+      (odd :variables vars2
+           :node-cache node-cache2
+           :operation operation2))
+     (and
+      ;; (eq (type-of odd1) (type-of odd2))
+      (eq node-cache1 node-cache2)
+      (eq operation1 operation2)
+      (equalp vars1 vars2)))))
 
-(defun-ematch* odd-apply (odd1 odd2 leaf-operation)
-  (((odd root variables node-cache operation) (odd :root root2))
-   (assert (odd-compatible-p odd1 odd2) nil "ODD ~a and ~a are incompatible!" odd1 odd2)
-   (odd (funcall operation root root2 leaf-operation) variables node-cache operation)))
+(defun odd-apply (odd1 odd2 leaf-operation)
+  "Applies the operation stored in ODD, recursively. At the leaf-level, applies LEAF-OPERATION."
+  (ematch* (odd1 odd2)
+    (((odd root variables node-cache operation) (odd :root root2))
+     (assert (odd-compatible-p odd1 odd2) nil "ODD ~a and ~a are incompatible!" odd1 odd2)
+     (odd (funcall operation root root2 leaf-operation) variables node-cache operation))))
 

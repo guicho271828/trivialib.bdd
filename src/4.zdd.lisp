@@ -2,7 +2,7 @@
 (in-package :trivialib.bdd)
 
 (defun zdd-node (variable hi lo)
-  "Node generation & pruning rule for ZDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
+  "Node generation & pruning rule for ZDD."
   (if (eq hi (leaf nil))
       lo
       (ensure-gethash (vector variable hi lo)
@@ -10,7 +10,8 @@
                       (make-node :variable variable :hi hi :lo lo))))
 
 (defun zdd-apply (f g op-leaf)
-  (labels ((rec (f g)
+  "APPLY rule for ZDD."
+ (labels ((rec (f g)
              (match* (f g)
                (((leaf :content c1) (leaf :content c2))
                 (leaf (funcall op-leaf c1 c2)))
@@ -45,6 +46,11 @@
 
 (ftype change (or node leaf) fixnum (or node leaf))
 (defun change (f variable)
+  "Change operation defined in MINATO et al. 93'. Flip the existense of a given variable in the family of sets.
+Examples:
+    (change {{1,3} {2,5}}   6) --> {{1,3,6} {2,5,6}}
+    (change {{1,3} {2,5,6}} 6) --> {{1,3,6} {2,5}}
+"
   (ematch f
     ;; ((leaf :content nil)
     ;;  f)
@@ -68,14 +74,15 @@
         (zdd-node variable f-lo f-hi))))))
 
 (defun zdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation #'zdd-apply))
+  "Shortcut for instantiating an ODD using ZDD-APPLY."
   (odd root variables node-cache operation))
 
 (defun make-set (variables)
-  "Example: (make-set '(1 3 5)) -- a zdd representing {{1,3,5}}"
+  "Example: (make-set '(1 3 5)) --> a zdd representing {{1,3,5}}"
   (reduce #'change variables :initial-value (leaf t)))
 
 (defun make-family (families)
-  "Example: (make-family '((1 3 5) (2 4))) -- a zdd representing {{1,3,5},{2,4}}"
+  "Example: (make-family '((1 3 5) (2 4))) --> a zdd representing {{1,3,5},{2,4}}"
   (reduce (lambda (prev next)
             ;; union
             (zdd-apply prev next (lambda (a b) (or a b))))

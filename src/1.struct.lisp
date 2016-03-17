@@ -32,7 +32,8 @@ HI,LO: hi/lo pointer"
 (declaim (type hash-table *node-cache*))
 
 (setf (documentation '*node-cache* 'variable)
-      "hash table to look up in order to avoid the creation of redundunt nodes.")
+      "Hash table to look up in order to avoid the creation of redundunt nodes.
+ This cache is specific to the ODD context defined by the pair of variables and operation(BDD-APPLY or ZDD-APPLY).")
 
 (defvar *variables*)
 (declaim (type sequence *variables*))

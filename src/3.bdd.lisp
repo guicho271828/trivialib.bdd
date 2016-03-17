@@ -1,7 +1,7 @@
 (in-package :trivialib.bdd)
 
 (defun bdd-node (variable hi lo)
-  "Node generation & pruning rule for BDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
+  "Node generation & pruning rule for BDD."
   (if (eq hi lo)
       hi
       (ensure-gethash (vector variable hi lo)
@@ -9,6 +9,7 @@
                       (make-node :variable variable :hi hi :lo lo))))
 
 (defun bdd-apply (f g op-leaf)
+  "APPLY rule for BDD."
   (labels ((rec (f g)
              (match* (f g)
                (((leaf :content c1) (leaf :content c2))
@@ -39,6 +40,8 @@
     (rec f g)))
 
 (defun unit (variable)
+  "Returns a BDD node whose HI node is a terminal node of T and LO node is a terminal node of NIL.
+ Useful for representing a boolean variable."
   ;; we already know the hi/lo branch aren't the same and the HI node
   ;; is not (leaf nil)
   (let ((hi (leaf t))
@@ -47,7 +50,9 @@
                     *node-cache*
                     (make-node :variable variable :hi hi :lo lo))))
 
-(defun !unit (variable)
+(defun !unit (variable) 
+  "Returns a BDD node whose HI node is a terminal node of NIL and LO node is a terminal node of T (opposite to UNIT).
+ Useful for representing a boolean variable."
   ;; we already know the hi/lo branch aren't the same and the HI node
   ;; is not (leaf nil)
   (let ((hi (leaf t))
@@ -57,4 +62,5 @@
                     (make-node :variable variable :hi lo :lo hi))))
 
 (defun bdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation #'bdd-apply))
+  "Shortcut for instantiating an ODD using BDD-APPLY."
   (odd root variables node-cache operation))

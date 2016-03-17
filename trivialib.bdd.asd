@@ -21,5 +21,5 @@
                (:file "3.bdd")
                (:file "4.zdd"))
   :serial t
-  :description "BDD and ZDD implementation"
+  :description "BDD and ZDD implementation using Trivia"
   :in-order-to ((test-op (test-op trivialib.bdd.test))))

@@ -1,7 +1,9 @@
 
 * Trivialib.Bdd 
 
-** Usage
+Functional implementation of (Ordered) Binary Decision Diagram (BDD) and Zero-suppressed Binary Decision Diagram (ZDD).
+
+
 
 ** Dependencies
 
