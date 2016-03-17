@@ -1,26 +1,26 @@
 (in-package :trivialib.bdd)
 
-(defun bdd-node (variable true false)
+(defun bdd-node (variable hi lo)
   "Node generation & pruning rule for BDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
-  (if (eq true false)
-      true
-      (ensure-gethash (vector variable true false)
+  (if (eq hi lo)
+      hi
+      (ensure-gethash (vector variable hi lo)
                       *node-cache*
-                      (make-node :variable variable :true true :false false))))
+                      (make-node :variable variable :hi hi :lo lo))))
 
 (defun bdd-apply (f g op-leaf)
   (labels ((rec (f g)
              (match* (f g)
                (((leaf :content c1) (leaf :content c2))
                 (leaf (funcall op-leaf c1 c2)))
-               (((leaf) (node variable true false))
+               (((leaf) (node variable hi lo))
                 (bdd-node variable
-                          (rec f true)
-                          (rec f false)))
-               (((node variable true false) (leaf))
+                          (rec f hi)
+                          (rec f lo)))
+               (((node variable hi lo) (leaf))
                 (bdd-node variable
-                          (rec g true)
-                          (rec g false)))
+                          (rec g hi)
+                          (rec g lo)))
                (((node f-variable f-hi f-lo)
                  (node g-variable g-hi g-lo))
                 (typecase (- f-variable g-variable)
@@ -39,22 +39,22 @@
     (rec f g)))
 
 (defun unit (variable)
-  ;; we already know the true/false branch aren't the same and the HI node
+  ;; we already know the hi/lo branch aren't the same and the HI node
   ;; is not (leaf nil)
-  (let ((true (leaf t))
-        (false (leaf nil)))
-    (ensure-gethash (vector variable true false)
+  (let ((hi (leaf t))
+        (lo (leaf nil)))
+    (ensure-gethash (vector variable hi lo)
                     *node-cache*
-                    (make-node :variable variable :true true :false false))))
+                    (make-node :variable variable :hi hi :lo lo))))
 
 (defun !unit (variable)
-  ;; we already know the true/false branch aren't the same and the HI node
+  ;; we already know the hi/lo branch aren't the same and the HI node
   ;; is not (leaf nil)
-  (let ((true (leaf t))
-        (false (leaf nil)))
-    (ensure-gethash (vector variable false true)
+  (let ((hi (leaf t))
+        (lo (leaf nil)))
+    (ensure-gethash (vector variable lo hi)
                     *node-cache*
-                    (make-node :variable variable :true false :false true))))
+                    (make-node :variable variable :hi lo :lo hi))))
 
 (defun bdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation *operation*))
   (odd root variables node-cache operation))

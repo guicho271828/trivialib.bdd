@@ -1,15 +1,13 @@
 
 (in-package :trivialib.bdd)
 
-
-
-(defun zdd-node (variable true false)
+(defun zdd-node (variable hi lo)
   "Node generation & pruning rule for ZDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
-  (if (eq true (leaf nil))
-      false
-      (ensure-gethash (vector variable true false)
+  (if (eq hi (leaf nil))
+      lo
+      (ensure-gethash (vector variable hi lo)
                       *node-cache*
-                      (make-node :variable variable :true true :false false))))
+                      (make-node :variable variable :hi hi :lo lo))))
 
 (defun zdd-apply (f g op-leaf)
   (labels ((rec (f g)
