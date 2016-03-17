@@ -10,21 +10,24 @@
   (:export
    #:leaf
    #:node
-   #:node-apply
-   #:bdd-node
-   #:zdd-node
    ;; managing contexts
    #:odd
    #:odd-apply
    #:with-odd-context
    #:call-with-odd-context
-   ;; utility
+   ;; bdd
    #:bdd
-   #:zdd
+   #:bdd-node
    #:bdd-apply
-   #:zdd-apply
    #:unit
-   #:!unit))
+   #:!unit
+   ;; zdd
+   #:zdd
+   #:zdd-node
+   #:zdd-apply
+   #:change
+   #:singleton
+   #:dont-care))
 (in-package :trivialib.bdd)
 
 ;; blah blah blah.

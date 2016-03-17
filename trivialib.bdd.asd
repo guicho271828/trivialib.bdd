@@ -17,8 +17,9 @@
   :pathname "src/"
   :components ((:file "0.package")
                (:file "1.struct")
-               (:file "3.container")
-               (:file "4.util"))
+               (:file "2.odd")
+               (:file "3.bdd")
+               (:file "4.zdd"))
   :serial t
   :description "BDD and ZDD implementation"
   :in-order-to ((test-op (test-op trivialib.bdd.test))))

@@ -21,10 +21,10 @@
 (defstruct node
   "lightweight node in Decision Diagram.
 VARIABLE: an integer representing the index of a variable. cf. VARIABLES slot in structure DD
-TRUE,FALSE: true/false pointer"
+HI,LO: hi/lo pointer"
   (variable 0 :type fixnum)
-  (true (leaf nil) :type (or node leaf))
-  (false (leaf nil) :type (or node leaf))
+  (hi (leaf nil) :type (or node leaf))
+  (lo (leaf nil) :type (or node leaf))
   #+trivialib.bdd.debug
   (id (incf *id*)))
 
@@ -41,22 +41,7 @@ TRUE,FALSE: true/false pointer"
       "ODD variables in the current context.")
 
 
-(defpattern node (&optional variable true false)
-  `(structure node :variable ,variable :true ,true :false ,false))
+(defpattern node (&optional variable hi lo)
+  `(structure node :variable ,variable :hi ,hi :lo ,lo))
 
 
-(defun bdd-node (variable true false)
-  "Node generation & pruning rule for BDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
-  (if (eq true false)
-      true
-      (ensure-gethash (vector variable true false)
-                      *node-cache*
-                      (make-node :variable variable :true true :false false))))
-
-(defun zdd-node (variable true false)
-  "Node generation & pruning rule for ZDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
-  (if (eq true (leaf nil))
-      false
-      (ensure-gethash (vector variable true false)
-                      *node-cache*
-                      (make-node :variable variable :true true :false false))))
