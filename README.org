@@ -3,9 +3,32 @@
 
 Functional implementation of (Ordered) Binary Decision Diagram (BDD) and Zero-suppressed Binary Decision Diagram (ZDD).
 
++ Bryant, Randal E. "Graph-based algorithms for boolean function
+  manipulation." Computers, IEEE Transactions on 100.8 (1986): 677-691.
++ Minato, Shin-ichi. "Zero-suppressed BDDs for set manipulation in
+  combinatorial problems." Design Automation, 1993. 30th Conference
+  on. IEEE, 1993.
 
+* FEATURES
 
-** Usage
+Based on structures --- moderately fast
+
+Weak hash table --- GC-aware, moderate memory usage
+
+Pattern matching --- functional, clean implementation
+
+* TODOs
+
++ more useful interfaces for set manipulation, function manipulation
++ speed
++ extension to ADD (Algebraic Decision Diagram) --- mostly trivial
++ extension to XADD (algebraic decision diagram)
++ extension to MV-DDs (multi-valued decision diagram)
++ extension to AADDs (affine algebrainc decision diagram) --- for representing formula
++ extension to XADDs (continuous variable extension of algebrainc decision diagram) --- for continuous range
++ extension to SDD (sentensial decision diagram)
+
+* Usage
 
 #+BEGIN_SRC lisp
 
