@@ -32,6 +32,8 @@ Pattern matching --- functional, clean implementation
 
 * Usage
 
+Web API Documentation will be available at http://quickdocs.org/trivialib.bdd/
+
 #+BEGIN_SRC lisp
 
 ;; Knuth Chapter 4, figure 12 (and 122), rightmost ("kernel")
