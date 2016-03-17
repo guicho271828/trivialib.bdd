@@ -45,11 +45,3 @@ TRUE,FALSE: true/false pointer"
   `(structure node :variable ,variable :true ,true :false ,false))
 
 
-
-(defun zdd-node (variable true false)
-  "Node generation & pruning rule for ZDD. Use it as NODE-GENERATOR argument to ODD-APPLY"
-  (if (eq true (leaf nil))
-      false
-      (ensure-gethash (vector variable true false)
-                      *node-cache*
-                      (make-node :variable variable :true true :false false))))

@@ -8,40 +8,53 @@
                       *node-cache*
                       (make-node :variable variable :true true :false false))))
 
-
 (defun bdd-apply (f g op-leaf)
   (labels ((rec (f g)
              (match* (f g)
                (((leaf :content c1) (leaf :content c2))
                 (leaf (funcall op-leaf c1 c2)))
                (((leaf) (node variable true false))
-                (bdd-node
-                         variable
-                         (rec f true)
-                         (rec f false)))
+                (bdd-node variable
+                          (rec f true)
+                          (rec f false)))
                (((node variable true false) (leaf))
-                (bdd-node
-                         variable
-                         (rec g true)
-                         (rec g false)))
+                (bdd-node variable
+                          (rec g true)
+                          (rec g false)))
                (((node f-variable f-hi f-lo)
                  (node g-variable g-hi g-lo))
                 (typecase (- f-variable g-variable)
                   ((integer * -1)
-                   (bdd-node
-                            f-variable
-                            (rec f-hi g)
-                            (rec f-lo g)))
+                   (bdd-node f-variable
+                             (rec f-hi g)
+                             (rec f-lo g)))
                   ((integer 1 *)
-                   (bdd-node
-                            g-variable
-                            (rec f g-hi)
-                            (rec f g-lo)))
+                   (bdd-node g-variable
+                             (rec f g-hi)
+                             (rec f g-lo)))
                   ((integer 0 0)
-                   (bdd-node
-                            f-variable
-                            (rec f-hi g-hi)
-                            (rec f-lo g-lo))))))))
+                   (bdd-node f-variable
+                             (rec f-hi g-hi)
+                             (rec f-lo g-lo))))))))
     (rec f g)))
 
+(defun unit (variable)
+  ;; we already know the true/false branch aren't the same and the HI node
+  ;; is not (leaf nil)
+  (let ((true (leaf t))
+        (false (leaf nil)))
+    (ensure-gethash (vector variable true false)
+                    *node-cache*
+                    (make-node :variable variable :true true :false false))))
 
+(defun !unit (variable)
+  ;; we already know the true/false branch aren't the same and the HI node
+  ;; is not (leaf nil)
+  (let ((true (leaf t))
+        (false (leaf nil)))
+    (ensure-gethash (vector variable false true)
+                    *node-cache*
+                    (make-node :variable variable :true false :false true))))
+
+(defun bdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation *operation*))
+  (odd root variables node-cache operation))
