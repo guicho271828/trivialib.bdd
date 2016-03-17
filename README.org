@@ -9,6 +9,8 @@ Functional implementation of (Ordered) Binary Decision Diagram (BDD) and Zero-su
   combinatorial problems." Design Automation, 1993. 30th Conference
   on. IEEE, 1993.
 
+[[http://users.cecs.anu.edu.au/~ssanner/AAAI16/][Tutorial slide]] on Symbolic Methods for Hybrid Inference, Optimization, and Decision-making at AAAI 2016, by [[http://users.cecs.anu.edu.au/~ssanner/][Scott Sanner]]
+
 * FEATURES
 
 Based on structures --- moderately fast
