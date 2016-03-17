@@ -42,8 +42,6 @@
                              (rec f-lo g-lo))))))))
     (rec f g)))
 
-(defun empty () (leaf nil))
-(defun base () (leaf t))
 
 (ftype change fixnum (or node leaf))
 (defun change (f variable)
@@ -64,3 +62,14 @@
 
 (defun zdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation #'zdd-apply))
   (odd root variables node-cache operation))
+
+
+(defun dont-care (f variable)
+  (zdd-apply f (change f variable)
+             (lambda (a b) (or a b))))
+
+(defun singleton (variable)
+  (change (leaf t) variable))
+
+
+
