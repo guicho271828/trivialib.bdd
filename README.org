@@ -24,17 +24,21 @@ Functional implementation of (Ordered) Binary Decision Diagram (BDD) and Zero-su
          (o (x) (odd (unit x)))
          (x (x) (odd (!unit x)))
          (change-many (node &rest args) (reduce #'change args :initial-value node)))
-  (with-odd-context ()
-    ;; using BDD reduction rule: 15 nodes
+
+  (with-odd-context (:variable '(a b c d e f))
+    ;; stored into VARIABLES slot of an ODD. ^^^
+    ;; Different variable orderings make ODDs incompatible.
     (gcprint
+     ;; using BDD reduction rule: 15 nodes
      (add (mul (o 1) (x 2) (o 3) (x 4) (o 5) (x 6))
           (mul (o 1) (x 2) (x 3) (o 4) (x 5) (x 6))
           (mul (x 1) (o 2) (x 3) (o 4) (x 5) (o 6))
           (mul (x 1) (o 2) (x 3) (x 4) (o 5) (x 6))
           (mul (x 1) (x 2) (o 3) (x 4) (x 5) (o 6)))))
   (with-odd-context (:operation #'zdd-apply)
-    ;; using Zero-suppressed reduction rule: 8 nodes
+    ;; Different reduction rule also make ODDs incompatible.
     (gcprint
+     ;; using Zero-suppressed reduction rule: 8 nodes
      (add (odd (change-many (leaf t) 1 3 5))
           (odd (change-many (leaf t) 1 4))
           (odd (change-many (leaf t) 2 4 6))
