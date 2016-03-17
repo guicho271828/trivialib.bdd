@@ -12,45 +12,55 @@
 (defun zdd-apply (f g op-leaf)
   (labels ((rec (f g)
              (match* (f g)
-               (((leaf :content nil) _) (funcall op-leaf g f))
-               ((_ (leaf :content nil)) (funcall op-leaf g f))
-               ((_ (eq f))              (funcall op-leaf g f))
+               (((leaf :content c1) (leaf :content c2))
+                (leaf (funcall op-leaf c1 c2)))
+               (((leaf) (node variable hi lo))
+                (zdd-node variable
+                          (rec f hi)
+                          (rec f lo)))
+               (((node variable hi lo) (leaf))
+                (zdd-node variable
+                          (rec g hi)
+                          (rec g lo)))
                (((node f-variable f-hi f-lo)
                  (node g-variable g-hi g-lo))
-                (cond ;; typecase (- f-variable g-variable)
-                  ((< f-variable g-variable) ;;(integer * -1)
-                   (zdd-node f-variable (rec f-hi (leaf nil)) (rec f-lo g)))
-                  ((> f-variable g-variable) ;; (integer 1 *)
-                   (zdd-node g-variable (rec g-hi (leaf nil)) (rec g-lo f)))
-                  ((= f-variable g-variable)
-                   (zdd-node f-variable (rec f-lo g-lo) (rec f-hi g-hi))))))))
+                (typecase (the fixnum (- f-variable g-variable))
+                  ((integer * -1)       ; (< f-variable g-variable)
+                   (zdd-node f-variable
+                             ;; f-hi contains the subsets which include f-variable.
+                             ;; there are no such subsets in g, since f-variable < g-variable.
+                             ;; thus it is a valid abstraction to give (leaf nil).
+                             (rec f-hi (leaf nil))
+                             (rec f-lo g)))
+                  ((integer 1 *)        ; (> f-variable g-variable)
+                   (zdd-node g-variable
+                             (rec g-hi (leaf nil))
+                             (rec g-lo f)))
+                  ((integer 0 0)        ; (= f-variable g-variable)
+                   (zdd-node f-variable
+                             (rec f-hi g-hi)
+                             (rec f-lo g-lo))))))))
     (rec f g)))
 
-(defun zdd-union (f g)
-  (match* (f g)
-    (((leaf :content nil) _) g)
-    ((_ (leaf :content nil)) f)
-    ((_ (eq f))              f)))
+(defun empty () (leaf nil))
+(defun base () (leaf t))
 
-(defun zdd-intersection (f g)
-  (match* (f g)
-    (((leaf :content nil) _) f)
-    ((_ (leaf :content nil)) g)
-    ((_ (eq f))              f)))
+(ftype change fixnum (or node leaf))
+(defun change (f variable)
+  (match f
+    ((node f-variable f-hi f-lo)
+     (typecase (the fixnum (- f-variable variable))
+       ((integer * -1)       ; (< f-variable variable)
+        (zdd-node f-variable
+                  (change f-hi variable)
+                  (change f-lo variable)))
+       ((integer 1 *)        ; (> f-variable variable)
+        ;; currently f does not contain VARIABLE, hence (> f-variable variable).
+        ;; toggle this by the operation below:
+        (zdd-node variable f (leaf nil)))
+       ((integer 0 0)        ; (= f-variable variable)
+        ;; swap lo and hi
+        (zdd-node variable f-lo f-hi))))))
 
-(defun zdd-diff (f g)
-  (match* (f g)
-    (((leaf :content nil) _) f)
-    ((_ (leaf :content nil)) f)
-    ((_ (eq f))              (leaf nil))))
-
-
-
-;; (defun zdd (root &optional (variables *variables*) (node-cache *node-cache*))
-;;   (odd root variables node-cache #'zdd-node))
-
-
-
-
-
-
+(defun zdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation #'zdd-apply))
+  (odd root variables node-cache operation))
