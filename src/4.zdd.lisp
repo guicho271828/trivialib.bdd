@@ -73,9 +73,9 @@ Examples:
         ;; swap lo and hi
         (zdd-node variable f-lo f-hi))))))
 
-(defun zdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation #'zdd-apply))
+(defun zdd (root &optional (variables *variables*) (node-cache *node-cache*))
   "Shortcut for instantiating an ODD using ZDD-APPLY."
-  (odd root variables node-cache operation))
+  (odd root variables node-cache #'zdd-apply))
 
 (defun make-set (variables)
   "Example: (make-set '(1 3 5)) --> a zdd representing {{1,3,5}}"

@@ -61,6 +61,6 @@
                     *node-cache*
                     (make-node :variable variable :hi lo :lo hi))))
 
-(defun bdd (root &optional (variables *variables*) (node-cache *node-cache*) (operation #'bdd-apply))
+(defun bdd (root &optional (variables *variables*) (node-cache *node-cache*))
   "Shortcut for instantiating an ODD using BDD-APPLY."
-  (odd root variables node-cache operation))
+  (odd root variables node-cache #'bdd-apply))
