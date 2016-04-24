@@ -17,19 +17,21 @@ For different variable ordering, ODDs are incompatible."
 
 (defmacro with-odd-context ((&key default variables node-cache (operation #'bdd-apply)
                                   &allow-other-keys) &body body)
-  "Execute BODY in a dynamic environment where *VARIABLES* , *NODE-CACHE* and *OPERATION* are set.
-When DEFAULT is specified, its values are used by default, but are superseded by the specified ones."
+  "Execute BODY in a dynamic environment where the context variables
+ (`*VARIABLES*' , `*NODE-CACHE*' and `*OPERATION*') are set.
+DEFAULT should be nil or an ODD object, in which case
+the context variables are inherited by the given ODD."
   `(call-with-odd-context ,default ,variables ,node-cache ,operation (lambda () ,@body)))
 
 (defun call-with-odd-context (default variables node-cache operation body-fn)
   "Function version of WITH-ODD-CONTEXT."
-  (match default
+  (ematch default
     ((odd :variables vs :node-cache nc :operation op)
      (let ((*variables* (or variables vs))
            (*node-cache* (or node-cache nc))
            (*operation* (or operation op)))
        (funcall body-fn)))
-    (_
+    (nil
      (let ((*variables* variables)
            (*node-cache* (or node-cache (tg:make-weak-hash-table :weakness :value :test #'equalp)))
            (*operation* operation))
