@@ -15,7 +15,7 @@ For different variable ordering, ODDs are incompatible."
   (operation *operation* :type (function ((or node leaf) (or node leaf) (function (* *) *))
                                          (or node leaf))))
 
-(defmacro with-odd-context ((&key default variables node-cache (operation #'bdd-apply)
+(defmacro with-odd-context ((&key default variables node-cache (operation '#'bdd-apply)
                                   &allow-other-keys) &body body)
   "Execute BODY in a dynamic environment where the context variables
  (`*VARIABLES*' , `*NODE-CACHE*' and `*OPERATION*') are set.
