@@ -12,7 +12,7 @@ For different variable ordering, ODDs are incompatible."
   (root (leaf nil) :type (or node leaf))
   (variables *variables* :type sequence)
   (node-cache *node-cache* :type hash-table)
-  (operation *operation* :type (function ((or node leaf) (or node leaf) (function (* *) *))
+  (operation *operation* :type (function ((or node leaf) (or node leaf) (function (t t) *))
                                          (or node leaf))))
 
 (defmacro with-odd-context ((&key default variables node-cache (operation '#'bdd-apply)
